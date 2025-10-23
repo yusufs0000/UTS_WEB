@@ -12,6 +12,7 @@
                 font-family: Arial, Helvetica, sans-serif;
                 margin: 0;
                 padding: 20px;
+                
             }
             .container{
                 background-color: white;
