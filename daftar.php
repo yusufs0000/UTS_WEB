@@ -84,19 +84,6 @@
                     Registrasi Berhasil!
                 </div>
                 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nama Lengkap</th>
-                            <th>Umur</th>
-                            <th>Asal Kota</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-                
                 <div class="back-button">
                     <a href="index.html">Kembali ke Form Registrasi</a>
                 </div>
