@@ -1,61 +1,261 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>::Registration Page::</title>
-        <style type="text/css">
-            body{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                background-size: cover;
-                background-image: url("https://cdn.arstechnica.net/wp-content/uploads/2023/06/bliss-update-1440x960.jpg");
+<head>
+    <title>::Registration Page::</title>
+    <style type="text/css">
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-size: cover;
+            background-image: url("https://cdn.arstechnica.net/wp-content/uploads/2023/06/bliss-update-1440x960.jpg");
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 20px;
+        }
+        
+        .form-container{
+            background-color: white;
+            border: 3px solid grey;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-container table{
+            background-color: transparent;
+            border: none;
+            padding: 0;
+        }
+        
+        td{
+            padding: 5px;
+        }
+        
+        button{
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover{
+            background-color: #45a049;
+        }
+        
+        .result-container{
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .result-title{
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .success-banner{
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        #outputTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        #outputTable th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: bold;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        #outputTable td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            color: #666;
+        }
+        
+        #outputTable tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .back-button{
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .back-button:hover{
+            background-color: #0056b3;
+        }
+        
+        #errorMsg {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container" id="formContainer">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center; font-size: 24px; font-weight: bold; padding-bottom: 20px;">
+                    Form Registrasi User
+                </td>
+            </tr>
+            <tr>
+                <td>Nama Depan:</td>
+                <td><input type="text" id="namaDepan" required style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
+            </tr>
+            <tr>
+                <td>Nama Belakang:</td>
+                <td><input type="text" id="namaBelakang" required style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
+            </tr>
+            <tr>
+                <td>Asal Kota:</td>
+                <td><input type="text" id="asalKota" required style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
+            </tr>
+            <tr>
+                <td>Umur:</td>
+                <td><input type="number" id="umur" required min="1" style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center; padding-top: 20px;">
+                    <button type="button" id="btnDaftar">Daftar</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="errorMsg"></div>
+    
+    <div class="result-container hidden" id="resultContainer">
+        <div class="result-title">Data Registrasi User</div>
+        <div class="success-banner">Registrasi Berhasil!</div>
+        <div id="result"></div>
+        <button class="back-button" id="btnKembali">Kembali ke Form Registrasi</button>
+    </div>
+
+    <script>
+        document.getElementById("btnDaftar").addEventListener("click", () => {
+            const namaDepan = document.getElementById("namaDepan").value;
+            const namaBelakang = document.getElementById("namaBelakang").value;
+            const asalKota = document.getElementById("asalKota").value;
+            const umur = parseInt(document.getElementById("umur").value);
+            const errorMsg = document.getElementById("errorMsg");
+            const result = document.getElementById("result");
+
+            errorMsg.innerHTML = "";
+            result.innerHTML = "";
+
+            // Validasi input kosong
+            if(!namaDepan || !namaBelakang || !asalKota || !umur){
+                errorMsg.innerHTML = "Error: Semua field harus diisi!";
+                return;
             }
+
+            // Validasi umur minimal 10
+            if(umur < 10){
+                errorMsg.innerHTML = "Error: Umur minimal harus 10 tahun!";
+                return;
+            }
+
+            // Membuat tabel hasil
+            const table = document.createElement('table');
+            table.id = 'outputTable';
             
-            table{
-                background-color: white;
-                border: 3px solid grey;
-                padding: 20px;
-                border-radius: 10px;
-                font-family:Arial, Helvetica, sans-serif;
+            // Membuat header tabel
+            const headerRow = document.createElement('tr');
+            ['No', 'Nama Lengkap', 'Umur', 'Asal Kota'].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+            
+            // Membuat baris data dengan logika:
+            // - Hanya nomor genap
+            // - Skip nomor 4 dan 8
+            for(let i = 1; i <= umur; i++){
+                if(i % 2 !== 0) continue; // Skip nomor ganjil
+                if(i === 4 || i === 8) continue; // Skip nomor 4 dan 8
+
+                const row = document.createElement('tr');
+                
+                const cellNo = document.createElement('td');
+                cellNo.textContent = i;
+                row.appendChild(cellNo);
+                
+                const cellNama = document.createElement('td');
+                cellNama.textContent = `${namaDepan} ${namaBelakang}`;
+                row.appendChild(cellNama);
+                
+                const cellUmur = document.createElement('td');
+                cellUmur.textContent = `${umur} tahun`;
+                row.appendChild(cellUmur);
+                
+                const cellKota = document.createElement('td');
+                cellKota.textContent = asalKota;
+                row.appendChild(cellKota);
+                
+                table.appendChild(row);
             }
-            td{
-                padding: 5px;
-            }
-            button{
-                background-color: greenyellow;
-                padding: 10px;
-                border-radius: 5px;
-            }
-        </style>
-    </head>
-    <body>
-        <form>
-            <table>
-                <tr>
-                    <td colspan="2" style="text-align: center; font-size: 24px; font-weight: bold; padding-bottom: 20px;">
-                        Form Registrasi User
-                    </td>
-                </tr>
-                <tr>
-                    <td>Nama Depan:</td>
-                    <td><input type="text" required style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
-                </tr>
-                <tr>
-                    <td>Nama Belakang:</td>
-                    <td><input type="text" required style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
-                </tr>
-                <tr>
-                    <td>Asal Kota:</td>
-                    <td><input type="text" required style="padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;"></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: center; padding-top: 20px;">
-                        <button type="submit" name="submit" style="background-color: #4CAF50; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
-                            Daftar
-                        </button>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </body>
+
+            result.appendChild(table);
+            
+            // Sembunyikan form, tampilkan hasil
+            document.getElementById("formContainer").classList.add("hidden");
+            document.getElementById("resultContainer").classList.remove("hidden");
+        });
+        
+        document.getElementById("btnKembali").addEventListener("click", () => {
+            document.getElementById("formContainer").classList.remove("hidden");
+            document.getElementById("resultContainer").classList.add("hidden");
+            document.getElementById("namaDepan").value = "";
+            document.getElementById("namaBelakang").value = "";
+            document.getElementById("asalKota").value = "";
+            document.getElementById("umur").value = "";
+            document.getElementById("errorMsg").innerHTML = "";
+        });
+    </script>
+</body>
 </html>
+
+Soal uts :
+1. Buat inputan baru untuk memasukan umur.
+2. Buat tabel untuk menampilkan data yang dimasukin dengan jumlah baris sebanyak umur yang dimasukan .
+3. Buat logika hanya menampilkan baris dengan nomor genap saja
+4. Buat logika men-skip nomor baris 4 dan 8
+5. Jumlah umur yang dimasukin minimal adalah 10 , jika kurang dari 10 maka akan keluar error .
